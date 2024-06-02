@@ -1,0 +1,27 @@
+services:
+  #
+  # base: defines the build and shared configurations
+  #
+  base: &base
+    image: "${COMPOSE_PROJECT_NAME}-base"
+    build:
+      context: .
+      dockerfile: "docker/Dockerfile"
+    stdin_open: true
+    tty: true
+    volumes:
+      - ".:/home/jovyan/python-mdd"
+    working_dir: "/home/jovyan/python-mdd"
+
+  # server: used to spin up an instance of jupyterlab
+  server:
+    <<: *base
+    container_name: "jupyterlab_server"
+    ports:
+      - "8888:8888"
+
+  # devbox: provide commandline access to the container
+  devbox:
+    <<: *base
+    command: [ "/bin/bash" ]
+
