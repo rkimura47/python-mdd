@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "python-mdd"
+  site-url: "https://rkimura47.github.io/python-mdd"
+  description: "A simple python implementation of multivalued decision diagrams for optimization"
+  repo-branch: main
+  repo-url: "https://github.com/rkimura47/python-mdd"
