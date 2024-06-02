@@ -17,7 +17,7 @@ USER ${NB_UID}
 
 # Install Python 3 packages
 RUN mamba install --yes \
-    'nbdev' && \
+    'fastai::nbdev' && \
     mamba clean --all -f -y && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
