@@ -1,5 +1,9 @@
 project:
   type: website
+  preview:
+    host: 0.0.0.0
+    port: 3000
+    browser: false
 
 format:
   html:
@@ -16,5 +20,7 @@ website:
     search: true
   sidebar:
     style: floating
+    contents:
+      auto: "*.ipynb"
 
-metadata-files: [nbdev.yml, sidebar.yml]
+metadata-files: [nbdev.yml]
