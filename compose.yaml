@@ -19,6 +19,7 @@ services:
     container_name: "jupyterlab_server"
     ports:
       - "8888:8888"
+      - "3000:3000"
 
   # devbox: provide commandline access to the container
   devbox:
