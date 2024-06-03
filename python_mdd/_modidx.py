@@ -5,4 +5,7 @@ d = { 'settings': { 'branch': 'main',
                 'doc_host': 'https://rkimura47.github.io',
                 'git_url': 'https://github.com/rkimura47/python-mdd',
                 'lib_path': 'python_mdd'},
-  'syms': {'python_mdd.core': {'python_mdd.core.foo': ('core.html#foo', 'python_mdd/core.py')}}}
+  'syms': { 'python_mdd.mdd': { 'python_mdd.mdd.MDDArc': ('mdd.html#mddarc', 'python_mdd/mdd.py'),
+                                'python_mdd.mdd.MDDArc.__str__': ('mdd.html#mddarc.__str__', 'python_mdd/mdd.py'),
+                                'python_mdd.mdd.MDDNode': ('mdd.html#mddnode', 'python_mdd/mdd.py'),
+                                'python_mdd.mdd.MDDNode.__str__': ('mdd.html#mddnode.__str__', 'python_mdd/mdd.py')}}}
