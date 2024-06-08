@@ -21,3 +21,48 @@ Fill me in please! Don’t forget code examples:
 ```
 
     2
+
+## Development
+
+This repo is set up using [nbdev](https://nbdev.fast.ai/), a Jupyter
+notebook-driven software development platform especially suited to
+creating Python packages with extensive, high-quality documentation.
+Additionally, the [Docker](https://docs.docker.com/manuals/) files
+provide a complete containerized JupyterLab environment for development.
+
+At a high level, the development workflow of nbdev can be summarized as
+follows: 1. Directly edit module source code / documentation in notebook
+files in `nbs/`. 2. “Restart the kernel and run all cells” to run the
+entire Notebook and check for errors. 3. Check the generated
+documentation via `nbdev_preview`. 4. Once you’re ready to commit
+changes, run the entire notebook, save, close it, then confirm via
+Git. 1. You can also manually run `nbdev_clean` then `nbdev_export`.
+
+Notably, `README.md` and the files in `python_mdd/` should NOT be
+manually edited; instead, they should be generated based on notebook
+files in `nbs/`.
+
+See the [nbdev documentation](https://nbdev.fast.ai/tutorials/) for
+additional details on software development using nbdev.
+
+To spin up the containerized JupyterLab server, run (from the repo root)
+
+    docker compose up server
+
+To take it down, run (from the repo root)
+
+    docker compose down
+
+Some notable quirks of this particular containerized setup: -
+`nbdev_preview` is configured to output to `0.0.0.0:3000` (and will say
+so in the console output), but it’s actually outputting to
+`localhost:3000` (from the perspective of the host machine). This is due
+to the command being run from within a container. - The outputs of
+Jupyter notebooks are cleaned on save via nbdev’s Jupyter hook. Note
+that this may not be (is usually not) immediately reflected in the
+JupyterLab web interface. - On container start-up, the repo package is
+installed in editable mode with the command `pip install -e '.[dev]'` to
+ensure it can be accessed from any notebook.
+
+Alternatively, any software development environment set up to work with
+the nbdev platform should also be sufficient.
