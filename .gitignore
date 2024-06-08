@@ -149,3 +149,9 @@ checklink/cookies.txt
 
 # Quarto
 .quarto
+
+# Docker compose
+compose.override.yml
+compose.override.yaml
+docker-compose.override.yml
+docker-compose.override.yaml
