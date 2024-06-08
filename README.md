@@ -40,7 +40,7 @@ follows:
 3.  Check the generated documentation via `nbdev_preview`.
 4.  Once you’re ready to commit changes, run the entire notebook, save,
     close it, then confirm via Git.
-    1.  You can also manually run `nbdev_clean` then `nbdev_export`.
+    1.  You can also manually run `nbdev_prepare`.
 
 Notably, `README.md` and the files in `python_mdd/` should NOT be
 manually edited; instead, they should be generated based on notebook
