@@ -28,9 +28,13 @@ RUN pip install --no-cache-dir \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 
+# Install Git-friendly Jupyter hooks
 RUN nbdev_install_hooks && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
+
+# Install startup scripts
+COPY --chown=${NB_UID}:${NB_GID} docker/install-package-editable.sh /usr/local/bin/start-notebook.d/
 
 USER ${NB_UID}
 
