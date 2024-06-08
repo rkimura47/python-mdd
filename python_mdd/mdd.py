@@ -7,7 +7,6 @@ __all__ = ['MDDNodeState', 'MDDArcLabel', 'MDDNode', 'MDDArc', 'MDDNodeInfo', 'M
 from collections.abc import Callable, Collection, Hashable, ItemsView, Iterable, Iterator, KeysView
 from itertools import chain
 from dataclasses import dataclass, field
-from fastcore.basics import patch
 from typing import Optional
 
 # %% ../nbs/00_mdd.ipynb 5
@@ -182,198 +181,175 @@ class MDD:
                 s += ', '.join(str(a) for a in self.allincomingarcs())
         return s
 
-# %% ../nbs/00_mdd.ipynb 17
-@patch
-def clear(self: MDD) -> None:
-    """Reset the MDD."""
-    self.nodes = []
+    def clear(self) -> None:
+        """Reset the MDD."""
+        self.nodes = []
 
-# %% ../nbs/00_mdd.ipynb 18
-@patch
-def append_new_layers(
-    self: MDD,
-    n: int = 1 # number of layers to append
-) -> None:
-    """Append new layers to the MDD."""
-    self.nodes.extend([dict() for _ in range(n)])
+    def append_new_layers(
+        self,
+        n: int = 1 # number of layers to append
+    ) -> None:
+        """Append new layers to the MDD."""
+        self.nodes.extend([dict() for _ in range(n)])
 
-# %% ../nbs/00_mdd.ipynb 19
-@patch
-def get_node_info(
-    self: MDD,
-    node: MDDNode, # node in MDD
-) -> MDDNodeInfo:
-    """Get `MDDNodeInfo` corresponding to `node`.
+    def get_node_info(
+        self,
+        node: MDDNode, # node in MDD
+    ) -> MDDNodeInfo:
+        """Get `MDDNodeInfo` corresponding to `node`.
 
-    Note this function can NOT be used to populate the underlying
-    dictionary; it can only be used to reference the object.
+        Note this function can NOT be used to populate the underlying
+        dictionary; it can only be used to reference the object.
 
-    In general, you should use allnodeitems_in_layer(...) if you
-    want to update node info in a systematic manner. The author
-    recommends only using this function if allnodeitems_in_layer(...)
-    cannot be used.
-    """
-    return self.nodes[node.layer][node]
+        In general, you should use allnodeitems_in_layer(...) if you
+        want to update node info in a systematic manner. The author
+        recommends only using this function if allnodeitems_in_layer(...)
+        cannot be used.
+        """
+        return self.nodes[node.layer][node]
 
-# %% ../nbs/00_mdd.ipynb 20
-@patch
-def add_arc(
-    self: MDD,
-    newarc: MDDArc, # arc to be added
-) -> None:
-    """Add an arc to the MDD, without any sanity checks.
+    def add_arc(
+        self,
+        newarc: MDDArc, # arc to be added
+    ) -> None:
+        """Add an arc to the MDD, without any sanity checks.
 
-    The head and tail nodes of the arc should already exist in the MDD.
-    """
-    self.get_node_info(newarc.tail).outgoing.append(newarc)
-    self.get_node_info(newarc.head).incoming.append(newarc)
+        The head and tail nodes of the arc should already exist in the MDD.
+        """
+        self.get_node_info(newarc.tail).outgoing.append(newarc)
+        self.get_node_info(newarc.head).incoming.append(newarc)
 
-# %% ../nbs/00_mdd.ipynb 21
-@patch
-def add_arcs(
-    self: MDD,
-    newarcs: Iterable[MDDArc], # arcs to be added
-) -> None:
-    """Add arcs to the MDD, without any sanity checks."""
-    for arc in newarcs:
-        self.add_arc(arc)
+    def add_arcs(
+        self,
+        newarcs: Iterable[MDDArc], # arcs to be added
+    ) -> None:
+        """Add arcs to the MDD, without any sanity checks."""
+        for arc in newarcs:
+            self.add_arc(arc)
 
-# %% ../nbs/00_mdd.ipynb 22
-@patch
-def remove_arc(
-    self: MDD,
-    rmvarc: MDDArc, # arc to be removed
-) -> None:
-    """Remove an arc from the MDD, without any sanity checks."""
-    self.get_node_info(rmvarc.tail).outgoing.remove(rmvarc)
-    self.get_node_info(rmvarc.head).incoming.remove(rmvarc)
+    def remove_arc(
+        self,
+        rmvarc: MDDArc, # arc to be removed
+    ) -> None:
+        """Remove an arc from the MDD, without any sanity checks."""
+        self.get_node_info(rmvarc.tail).outgoing.remove(rmvarc)
+        self.get_node_info(rmvarc.head).incoming.remove(rmvarc)
 
-# %% ../nbs/00_mdd.ipynb 23
-@patch
-def remove_arcs(
-    self: MDD,
-    rmvarcs: Iterable[MDDArc], # arcs to be removed
-) -> None:
-    """Remove arcs from the MDD, without any sanity checks."""
-    for arc in rmvarcs:
-        self.remove_arc(arc)
+    def remove_arcs(
+        self,
+        rmvarcs: Iterable[MDDArc], # arcs to be removed
+    ) -> None:
+        """Remove arcs from the MDD, without any sanity checks."""
+        for arc in rmvarcs:
+            self.remove_arc(arc)
 
-# %% ../nbs/00_mdd.ipynb 24
-@patch
-def add_node(
-    self: MDD,
-    newnode: MDDNode, # node to be added
-) -> None:
-    """Add a node to the MDD, without any sanity checks.
+    def add_node(
+        self,
+        newnode: MDDNode, # node to be added
+    ) -> None:
+        """Add a node to the MDD, without any sanity checks.
 
-    The node's layer should already exist in the MDD.
+        The node's layer should already exist in the MDD.
 
-    NOTE: If an identical node already exists, its incoming and outgoing
-    arcs will be ERASED!!!
-    """
-    self.nodes[newnode.layer][newnode] = MDDNodeInfo()
+        NOTE: If an identical node already exists, its incoming and outgoing
+        arcs will be ERASED!!!
+        """
+        self.nodes[newnode.layer][newnode] = MDDNodeInfo()
 
-# %% ../nbs/00_mdd.ipynb 25
-@patch
-def add_nodes(
-    self: MDD,
-    newnodes: Iterable[MDDNode], # nodes to be added
-) -> None:
-    """Add nodes to the MDD, without any sanity checks."""
-    for node in newnodes:
-        self.add_node(node)
+    def add_nodes(
+        self,
+        newnodes: Iterable[MDDNode], # nodes to be added
+    ) -> None:
+        """Add nodes to the MDD, without any sanity checks."""
+        for node in newnodes:
+            self.add_node(node)
 
-# %% ../nbs/00_mdd.ipynb 26
-@patch
-def remove_node(
-    self: MDD,
-    rmvnode: MDDNode, # node to be removed
-) -> None:
-    """Remove a node from the MDD, without any sanity checks."""
-    for arc in self.get_node_info(rmvnode).incoming:
-        self.get_node_info(arc.tail).outgoing.remove(arc)
-    for arc in self.get_node_info(rmvnode).outgoing:
-        self.get_node_info(arc.head).incoming.remove(arc)
-    del self.nodes[rmvnode.layer][rmvnode]
+    def remove_node(
+        self,
+        rmvnode: MDDNode, # node to be removed
+    ) -> None:
+        """Remove a node from the MDD, without any sanity checks."""
+        for arc in self.get_node_info(rmvnode).incoming:
+            self.get_node_info(arc.tail).outgoing.remove(arc)
+        for arc in self.get_node_info(rmvnode).outgoing:
+            self.get_node_info(arc.head).incoming.remove(arc)
+        del self.nodes[rmvnode.layer][rmvnode]
 
-# %% ../nbs/00_mdd.ipynb 27
-@patch
-def remove_nodes(
-    self: MDD,
-    rmvnodes: Iterable[MDDNode], # nodes to be removed
-) -> None:
-    """Remove nodes from the MDD, without any sanity checks."""
-    for node in rmvnodes:
-        self.remove_node(node)
+    def remove_nodes(
+        self,
+        rmvnodes: Iterable[MDDNode], # nodes to be removed
+    ) -> None:
+        """Remove nodes from the MDD, without any sanity checks."""
+        for node in rmvnodes:
+            self.remove_node(node)
 
-# %% ../nbs/00_mdd.ipynb 31
-def _default_awfun(w: float, ns: MDDNodeState, nt: MDDNodeState, j: int) -> float:
-    """By default, do not adjust the weight of the arc."""
-    return w
+    @staticmethod
+    def _default_awfun(w: float, ns: MDDNodeState, nt: MDDNodeState, j: int) -> float:
+        """By default, do not adjust the weight of the arc."""
+        return w
 
-@patch
-def merge_nodes(
-    self: MDD,
-    mnodes: Collection[MDDNode],
-    mlayer: int,
-    nsfun: Callable[[Collection[MDDNodeState], int], MDDNodeState],
-    awinfun: Optional[Callable[[float, MDDNodeState, MDDNodeState, int], float]] = None,
-    awoutfun: Optional[Callable[[float, MDDNodeState, MDDNodeState, int], float]] = None,
-) -> MDDNode:
-    """Merge specified nodes into a new supernode, and modify arcs appropriately.
+    def merge_nodes(
+        self,
+        mnodes: Collection[MDDNode],
+        mlayer: int,
+        nsfun: Callable[[Collection[MDDNodeState], int], MDDNodeState],
+        awinfun: Optional[Callable[[float, MDDNodeState, MDDNodeState, int], float]] = None,
+        awoutfun: Optional[Callable[[float, MDDNodeState, MDDNodeState, int], float]] = None,
+    ) -> MDDNode:
+        """Merge specified nodes into a new supernode, and modify arcs appropriately.
 
-    NOTE: All nodes to be merged must be located on the same layer.
+        NOTE: All nodes to be merged must be located on the same layer.
 
-    Parameters
-    ----------
-    mnodes : Collection[MDDNode]
-        nodes to be merged together
-    mlayer : int
-        layer containing all nodes to be merged
-    nsfun : Callable[[Collection[MDDNodeState], int], MDDNodeState]
-        nsfun(slist,j) returns the node state resulting from merging node states in 'slist' in layer 'j'
-    awinfun : Optional[Callable[[float, MDDNodeState, MDDNodeState, int], float]]
-        awinfun(w,os,ms,j) returns the adjusted weight of an arc with weight 'w', old head node state 'os', and new head node (i.e., merged supernode in layer 'j') state 'ms';
-        if awfun is None (default), the original weight is used
-    awoutfun : Optional[Callable[[float, MDDNodeState, MDDNodeState, int], float]]
-        awoutfun(w,os,ms,j) returns the adjusted weight of an arc with weight 'w', old tail node state 'os', and new tail node (i.e., merged supernode in layer 'j') state 'ms';
-        if awoutfun is None (default), the original weight is used
+        Parameters
+        ----------
+        mnodes : Collection[MDDNode]
+            nodes to be merged together
+        mlayer : int
+            layer containing all nodes to be merged
+        nsfun : Callable[[Collection[MDDNodeState], int], MDDNodeState]
+            nsfun(slist,j) returns the node state resulting from merging node states in 'slist' in layer 'j'
+        awinfun : Optional[Callable[[float, MDDNodeState, MDDNodeState, int], float]]
+            awinfun(w,os,ms,j) returns the adjusted weight of an arc with weight 'w', old head node state 'os', and new head node (i.e., merged supernode in layer 'j') state 'ms';
+            if awfun is None (default), the original weight is used
+        awoutfun : Optional[Callable[[float, MDDNodeState, MDDNodeState, int], float]]
+            awoutfun(w,os,ms,j) returns the adjusted weight of an arc with weight 'w', old tail node state 'os', and new tail node (i.e., merged supernode in layer 'j') state 'ms';
+            if awoutfun is None (default), the original weight is used
 
-    Returns
-    -------
-    MDDNode
-        new merged supernode
-    """
-    if awinfun is None:
-        awinfun = _default_awfun
-    if awoutfun is None:
-        awoutfun = _default_awfun
+        Returns
+        -------
+        MDDNode
+            new merged supernode
+        """
+        if awinfun is None:
+            awinfun = self._default_awfun
+        if awoutfun is None:
+            awoutfun = self._default_awfun
 
-    # Create new supernode, and new incoming / outgoing arcs
-    mState = nsfun([v.state for v in mnodes], mlayer)
-    mNode = MDDNode(mlayer, mState)
+        # Create new supernode, and new incoming / outgoing arcs
+        mState = nsfun([v.state for v in mnodes], mlayer)
+        mNode = MDDNode(mlayer, mState)
 
-    newIncoming = []
-    newOutgoing = []
-    for v in mnodes:
-        node_info = self.get_node_info(v)
-        for inarc in node_info.incoming:
-            new_inarc = MDDArc(inarc.label, awinfun(inarc.weight, inarc.head.state, mState, mlayer), inarc.tail, mNode)
-            newIncoming.append(new_inarc)
-        for outarc in node_info.outgoing:
-            new_outarc = MDDArc(outarc.label, awoutfun(outarc.weight, outarc.tail.state, mState, mlayer), mNode, outarc.head)
-            newOutgoing.append(new_outarc)
+        newIncoming = []
+        newOutgoing = []
+        for v in mnodes:
+            node_info = self.get_node_info(v)
+            for inarc in node_info.incoming:
+                new_inarc = MDDArc(inarc.label, awinfun(inarc.weight, inarc.head.state, mState, mlayer), inarc.tail, mNode)
+                newIncoming.append(new_inarc)
+            for outarc in node_info.outgoing:
+                new_outarc = MDDArc(outarc.label, awoutfun(outarc.weight, outarc.tail.state, mState, mlayer), mNode, outarc.head)
+                newOutgoing.append(new_outarc)
 
-    # Delete merged nodes
-    for v in mnodes:
-        self.remove_node(v)
+        # Delete merged nodes
+        for v in mnodes:
+            self.remove_node(v)
 
-    # Add supernode and its arcs to MDD
-    self.add_node(mNode)
-    for inarc in newIncoming:
-        self.add_arc(inarc)
-    for outarc in newOutgoing:
-        self.add_arc(outarc)
+        # Add supernode and its arcs to MDD
+        self.add_node(mNode)
+        for inarc in newIncoming:
+            self.add_arc(inarc)
+        for outarc in newOutgoing:
+            self.add_arc(outarc)
 
-    # Return new merged supernode
-    return mNode
+        # Return new merged supernode
+        return mNode
