@@ -7,6 +7,7 @@ __all__ = ['MDDNodeState', 'MDDArcLabel', 'MDDNode', 'MDDArc', 'MDDNodeInfo', 'M
 from collections.abc import Callable, Collection, Hashable, ItemsView, Iterable, Iterator, KeysView
 from itertools import chain
 from dataclasses import dataclass, field
+from fastcore.basics import patch
 
 # %% ../nbs/00_mdd.ipynb 5
 MDDNodeState = Hashable
