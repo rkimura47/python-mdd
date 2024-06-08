@@ -8,6 +8,7 @@ from collections.abc import Callable, Collection, Hashable, ItemsView, Iterable,
 from itertools import chain
 from dataclasses import dataclass, field
 from fastcore.basics import patch
+from typing import Optional
 
 # %% ../nbs/00_mdd.ipynb 5
 MDDNodeState = Hashable
@@ -316,8 +317,8 @@ def merge_nodes(
     mnodes: Collection[MDDNode],
     mlayer: int,
     nsfun: Callable[[Collection[MDDNodeState], int], MDDNodeState],
-    awinfun: Callable[[float, MDDNodeState, MDDNodeState, int], float] | None = None,
-    awoutfun: Callable[[float, MDDNodeState, MDDNodeState, int], float] | None = None,
+    awinfun: Optional[Callable[[float, MDDNodeState, MDDNodeState, int], float]] = None,
+    awoutfun: Optional[Callable[[float, MDDNodeState, MDDNodeState, int], float]] = None,
 ) -> MDDNode:
     """Merge specified nodes into a new supernode, and modify arcs appropriately.
 
@@ -331,10 +332,10 @@ def merge_nodes(
         layer containing all nodes to be merged
     nsfun : Callable[[Collection[MDDNodeState], int], MDDNodeState]
         nsfun(slist,j) returns the node state resulting from merging node states in 'slist' in layer 'j'
-    awinfun : Callable[[float, MDDNodeState, MDDNodeState, int], float] | None
+    awinfun : Optional[Callable[[float, MDDNodeState, MDDNodeState, int], float]]
         awinfun(w,os,ms,j) returns the adjusted weight of an arc with weight 'w', old head node state 'os', and new head node (i.e., merged supernode in layer 'j') state 'ms';
         if awfun is None (default), the original weight is used
-    awoutfun : Callable[[float, MDDNodeState, MDDNodeState, int], float] | None
+    awoutfun : Optional[Callable[[float, MDDNodeState, MDDNodeState, int], float]]
         awoutfun(w,os,ms,j) returns the adjusted weight of an arc with weight 'w', old tail node state 'os', and new tail node (i.e., merged supernode in layer 'j') state 'ms';
         if awoutfun is None (default), the original weight is used
 
