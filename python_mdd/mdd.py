@@ -9,7 +9,7 @@ from itertools import chain
 from dataclasses import dataclass, field
 from typing import Optional
 
-# %% ../nbs/00_mdd.ipynb 5
+# %% ../nbs/00_mdd.ipynb 7
 MDDNodeState = Hashable
 
 @dataclass(frozen=True)
@@ -33,7 +33,7 @@ class MDDNode:
     def __str__(self) -> str:
         return f"N_{self.layer}({self.state})"
 
-# %% ../nbs/00_mdd.ipynb 8
+# %% ../nbs/00_mdd.ipynb 10
 MDDArcLabel = Hashable
 
 @dataclass()
@@ -63,7 +63,7 @@ class MDDArc:
     def __str__(self) -> str:
         return f"A({self.label},{self.weight}:{self.tail},{self.head})"
 
-# %% ../nbs/00_mdd.ipynb 11
+# %% ../nbs/00_mdd.ipynb 13
 @dataclass()
 class MDDNodeInfo:
     """MDDNodeInfo represents information associated with an MDDNode.
@@ -84,7 +84,7 @@ class MDDNodeInfo:
         outgoing_str = ", ".join(str(a) for a in self.outgoing)
         return f"<in=[{incoming_str}], out=[{outgoing_str}]>"
 
-# %% ../nbs/00_mdd.ipynb 14
+# %% ../nbs/00_mdd.ipynb 16
 @dataclass()
 class MDD:
     """MDD represents a multivalued decision diagram, or MDD.
