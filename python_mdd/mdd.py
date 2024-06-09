@@ -168,33 +168,33 @@ class MDD:
         show_incoming: bool = False, # show incoming arcs (default: False)
     ) -> str:
         """Return a (human-readable) string representation of the MDD."""
-        s = '== MDD (' + self.name + ', ' + str(self.num_arc_layers) + ' layers) ==\n'
+        s = f"== MDD ({self.name}, {self.num_arc_layers} layers) ==\n"
         if show_long:
             # Long form
-            s += '# Nodes\n'
+            s += "# Nodes\n"
             for (j, lyr) in enumerate(self.nodes):
-                s += 'L' + str(j) + ':\n'
+                s += f"L{j}:\n"
                 for v in lyr:
-                    s += '\t' + str(v) + ': <'
-                    s += 'in={' + ', '.join(str(a) for a in self.nodes[j][v].incoming) + '}, '
-                    s += 'out={' + ', '.join(str(a) for a in self.nodes[j][v].outgoing) + '}'
-                    s += '>\n'
-            s += '# (Outgoing) Arcs\n'
-            s += '\n'.join(str(a) + ":" + str(self.arcs[a]) for a in self.all_outgoing_arcs())
+                    s += f"\t{v}: <"
+                    s += "in={" + ", ".join(str(a) for a in self.nodes[j][v].incoming) + "}, "
+                    s += "out={" + ", ".join(str(a) for a in self.nodes[j][v].outgoing) + "}"
+                    s += ">\n"
+            s += "# (Outgoing) Arcs\n"
+            s += "\n".join(f"{a}:{self.arcs[a]}" for a in self.all_outgoing_arcs())
             if show_incoming:
-                s += '\n# (Incoming) Arcs\n'
-                s += '\n'.join(str(a) + ":" + str(self.arcs[a]) for a in self.all_incoming_arcs())
+                s += "\n# (Incoming) Arcs\n"
+                s += "\n".join(f"{a}:{self.arcs[a]}" for a in self.all_incoming_arcs())
         else:
             # Short form
-            s += '# Nodes\n'
+            s += "# Nodes\n"
             for (j, lyr) in enumerate(self.nodes):
-                s += 'L' + str(j) + ': '
-                s += ', '.join(str(v) for v in self.allnodes_in_layer(j)) + '\n'
-            s += '# (Outgoing) Arcs\n'
-            s += ', '.join(str(a) + ":" + str(self.arcs[a]) for a in self.all_outgoing_arcs())
+                s += f"L{j}: "
+                s += ", ".join(str(v) for v in self.allnodes_in_layer(j)) + "\n"
+            s += "# (Outgoing) Arcs\n"
+            s += ", ".join(f"{a}:{self.arcs[a]}" for a in self.all_outgoing_arcs())
             if show_incoming:
-                s += '\n# (Incoming) Arcs\n'
-                s += ', '.join(str(a) + ":" + str(self.arcs[a]) for a in self.all_incoming_arcs())
+                s += "\n# (Incoming) Arcs\n"
+                s += ", ".join(f"{a}:{self.arcs[a]}" for a in self.all_incoming_arcs())
         return s
 
     def clear(self) -> None:
