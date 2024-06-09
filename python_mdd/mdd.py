@@ -40,7 +40,7 @@ MDDArcLabel = Hashable
 class MDDArc:
     """MDDArc represents a single arc in the MDD.
 
-    An MDDArc is uniquely identified by its head/tail nodes, label, and weight.
+    An MDDArc is uniquely identified by its head node, tail node, and label.
     The (arc) label must be a `collections.abc.Hashable` object.
 
     Parameters
@@ -63,7 +63,7 @@ class MDDArc:
 # %% ../nbs/00_mdd.ipynb 13
 @dataclass()
 class MDDNodeData:
-    """MDDNodeData represents information associated with an MDDNode.
+    """MDDNodeData represents information associated with an `MDDNode`.
 
     Parameters
     ----------
@@ -84,7 +84,7 @@ class MDDNodeData:
 # %% ../nbs/00_mdd.ipynb 16
 @dataclass()
 class MDDArcData:
-    """MDDArcData represents information associated with an MDDArc.
+    """MDDArcData represents information associated with an `MDDArc`.
 
     Parameters
     ----------
@@ -100,7 +100,7 @@ class MDDArcData:
 # %% ../nbs/00_mdd.ipynb 17
 @dataclass()
 class MDD:
-    """MDD represents a multivalued decision diagram, or MDD.
+    """MDD represents a multivalued decision diagram.
 
     Parameters
     ----------
@@ -108,7 +108,7 @@ class MDD:
         name of MDD (default: 'mdd')
     nodes : list[dict[MDDNode, MDDNodeData]]
         nodes of MDD (default: [])
-    arcs: dict[MDDArc, MDDArcData]
+    arcs : dict[MDDArc, MDDArcData]
         arcs of MDD (default: dict())
 
     """
@@ -118,48 +118,69 @@ class MDD:
 
     @property
     def num_node_layers(self) -> int:
-        """Number of node layers; equal to number of 'variables' + 1."""
+        """Number of node layers; equal to number of 'variables' + 1.
+
+        Class property: `int`
+        """
         return len(self.nodes)
 
     @property
     def num_arc_layers(self) -> int:
-        """Number of arc layers; equal to number of 'variables'."""
+        """Number of arc layers; equal to number of 'variables'.
+
+        Class property: `int`
+        """
         return len(self.nodes) - 1
 
     @property
     def width_list(self) -> list[int]:
-        """Number of nodes in each layer."""
+        """Number of nodes in each layer.
+
+        Class property: `list`[`int`]
+        """
         return [len(layer) for layer in self.nodes]
 
     @property
     def max_width(self) -> int:
-        """Maximum number of nodes in a single node layer."""
+        """Maximum number of nodes in a single node layer.
+
+        Class property: `int`
+        """
         return max(len(layer) for layer in self.nodes)
 
     def all_nodes(self) -> Iterator[MDDNode]:
-        """Iterate over all MDDNodes in the MDD."""
+        """Iterate over all nodes in the MDD.
+
+        Returns: `collections.abc.Iterator`[`MDDNode`]
+        """
         return chain.from_iterable(l.keys() for l in self.nodes)
 
     def all_nodeitems_in_layer(
         self,
         layer: int, # index of layer
-    ) -> ItemsView[MDDNode, MDDNodeData]:
-        """Return a view of all (MDDNode, MDDNodeData) pairs in a layer."""
+    ) -> ItemsView[MDDNode, MDDNodeData]: # `collections.abc.ItemsView`[`MDDNode`, `MDDNodeData`]
+        """A view of all nodes and their associated data in a layer."""
         return self.nodes[layer].items()
 
     def allnodes_in_layer(
         self,
         layer: int, # index of layer
-    ) -> KeysView[MDDNode]:
-        """Return a view of all MDDNodes in a layer."""
+    ) -> KeysView[MDDNode]: # `collections.abc.KeysView`[`MDDNode`]
+        """Return a view of all nodes in a layer."""
         return self.nodes[layer]
 
     def all_outgoing_arcs(self) -> Iterator[MDDArc]:
-        """Iterate over all outgoing arcs in the MDD."""
+        """Iterate over all outgoing arcs in the MDD.
+
+        Returns: `collections.abc.Iterator`[`MDDArc`]
+        """
         return chain.from_iterable(ui.outgoing for j in range(self.num_arc_layers) for ui in self.nodes[j].values())
 
     def all_incoming_arcs(self) -> Iterator[MDDArc]:
-        """Iterate over all incoming arcs in the MDD."""
+        """Iterate over all incoming arcs in the MDD.
+
+        Returns: `collections.abc.Iterator`[`MDDArc`]
+        """
         return chain.from_iterable(ui.incoming for j in range(self.num_arc_layers) for ui in self.nodes[j+1].values())
 
     def __str__(
@@ -198,7 +219,10 @@ class MDD:
         return s
 
     def clear(self) -> None:
-        """Reset the MDD."""
+        """Reset the MDD.
+
+        Returns: None
+        """
         self.nodes = []
 
     def append_new_layers(
@@ -217,9 +241,9 @@ class MDD:
         Note this function can NOT be used to populate the underlying
         dictionary; it can only be used to reference the object.
 
-        In general, you should use all_nodeitems_in_layer(...) if you
+        In general, you should use `MDD.all_nodeitems_in_layer` if you
         want to update node data in a systematic manner. The author
-        recommends only using this function if all_nodeitems_in_layer(...)
+        recommends only using this function if `MDD.all_nodeitems_in_layer`
         cannot be used.
         """
         return self.nodes[node.layer][node]
@@ -326,12 +350,12 @@ class MDD:
         mlayer : int
             layer containing all nodes to be merged
         nsfun : Callable[[Collection[MDDNodeState], int], MDDNodeState]
-            nsfun(slist,j) returns the node state resulting from merging node states in 'slist' in layer 'j'
+            function that determines the node state of the new merged supernode
         adinfun : Optional[Callable[[MDDArcData, MDDNodeState, MDDNodeState, int], MDDArcData]]
-            adinfun(d,os,ms,j) returns the adjusted data of an arc with data 'd', old head node state 'os', and new head node (i.e., merged supernode in layer 'j') state 'ms';
+            function that determines the arc data of all arcs incoming to the new merged supernode;
             if adinfun is None (default), the original arc data is used
         adoutfun : Optional[Callable[[MDDArcData, MDDNodeState, MDDNodeState, int], MDDArcData]]
-            adoutfun(d,os,ms,j) returns the adjusted data of an arc with data 'd', old tail node state 'os', and new tail node (i.e., merged supernode in layer 'j') state 'ms';
+            function that determines the arc data of all arcs outgoing from the new merged supernode;
             if adoutfun is None (default), the original arc data is used
 
         Returns
