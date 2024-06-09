@@ -354,11 +354,11 @@ class MDD:
             node_info = self.get_node_info(v)
             for inarc in node_info.incoming:
                 new_inarc = MDDArc(inarc.label, inarc.tail, mNode)
-                new_inarc_info = awinfun(self.arc_info[inarc].weight, inarc.head.state, mState, mlayer)
+                new_inarc_info = awinfun(self.arc_info[inarc], inarc.head.state, mState, mlayer)
                 newIncoming[new_inarc] = new_inarc_info
             for outarc in node_info.outgoing:
                 new_outarc = MDDArc(outarc.label, mNode, outarc.head)
-                new_outarc_info = awoutfun(self.arc_info[outarc].weight, outarc.tail.state, mState, mlayer)
+                new_outarc_info = awoutfun(self.arc_info[outarc], outarc.tail.state, mState, mlayer)
                 newOutgoing[new_outarc] = new_outarc_info
 
         # Delete merged nodes
