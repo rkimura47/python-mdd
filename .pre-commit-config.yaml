@@ -1,0 +1,6 @@
+repos:
+  - repo: https://github.com/nbQA-dev/nbQA
+    rev: 1.8.5
+    hooks:
+      - id: nbqa-mypy
+        additional_dependencies: ["mypy", "pytest"]
