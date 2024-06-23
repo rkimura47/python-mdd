@@ -1,4 +1,9 @@
 repos:
+  - repo: https://github.com/fastai/nbdev
+    rev: 2.3.25
+    hooks:
+      - id: nbdev_clean
+      - id: nbdev_export
   - repo: https://github.com/nbQA-dev/nbQA
     rev: 1.8.5
     hooks:
