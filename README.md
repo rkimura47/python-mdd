@@ -86,3 +86,19 @@ Some notable quirks of this particular containerized setup:
 
 Alternatively, any software development environment set up to work with
 the nbdev platform should also be sufficient.
+
+### Notes on accessing host SSH credentials from within a container
+
+You may want to access your host SSH credentials from within the
+container if you are using pre-commit with the containerized
+environment. Unfortunately this can be tricky to set up (especially on
+Windows), and the details are far beyond the scope of this README.
+
+That said, one relatively straightforward method is to specify a private
+`compose.override.yaml` file to mount the necessary SSH files. The
+following links may provide some guidance on specifics:
+
+- https://blog.gabrielmajeri.ro/2022/01/21/how-to-share-ssh-credentials-between-windows-and-wsl-2.html
+- https://skyraptor.eu/blog/seamless-integration-using-windows-ssh-keys-and-ssh-agent-in-wsl2
+- https://docs.docker.com/desktop/networking/#ssh-agent-forwarding
+- https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials
