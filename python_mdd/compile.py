@@ -4,8 +4,9 @@
 __all__ = ['compile_top_down']
 
 # %% ../nbs/01_compile.ipynb 3
-from collections.abc import Callable, Collection
+from collections.abc import Callable, Collection, Sequence
 from .mdd import DEFAULT_MDD_NAME, MDD, MDDArc, MDDArcData, MDDNode, MDDNodeState
+from random import sample
 from typing import Optional
 
 # %% ../nbs/01_compile.ipynb 6
@@ -16,15 +17,16 @@ def compile_top_down(
     arc_data_function: Callable[[MDDNodeState, int, int, MDDNodeState], MDDArcData], # function specifying arc data
     root_state: MDDNodeState, # state of the root node
     is_feasible: Callable[[MDDNodeState, int], bool], # function that determines whether a node state is feasible
-    max_width: Optional[Callable[[int], int]] = None, # function specifying the maximum width of each layer
+    max_width: Optional[Callable[[int], float]] = None, # function specifying the maximum width of each layer
     merge_function: Optional[Callable[[Collection[MDDNodeState], int], MDDNodeState]] = None, # function that determines how to merge node states
     arcdata_function: Optional[Callable[[MDDArcData, MDDNodeState, MDDNodeState, int], MDDArcData]] = None, # function specifying the arc data
-    node_selection_function: Optional[Callable[[Collection[MDDNode], int], list[MDDNode]]] = None, # function specifying nodes to select for merge / removal
+    node_selection_function: Optional[Callable[[Sequence[MDDNode], int], list[MDDNode]]] = None, # function specifying nodes to select for merge / removal
     name: str = DEFAULT_MDD_NAME, # name of MDD
 ) -> MDD: # Compiled decision diagram
     # Basic parameter checks  and default settings
     if max_width is None:
         max_width = lambda j: float("inf")
+        node_selection_function = lambda slist,j: list(slist)
     else:
         if merge_function is None != arcdata_function is None:
             raise RuntimeError("merge_function and arcdata_function must be defined together")
