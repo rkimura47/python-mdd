@@ -169,7 +169,7 @@ class MDD:
         layer: int, # index of layer
     ) -> KeysView[MDDNode]: # `collections.abc.KeysView`[`MDDNode`]
         """Return a view of all nodes in a layer."""
-        return self.nodes[layer]
+        return self.nodes[layer].keys()
 
     def all_outgoing_arcs(self) -> Iterator[MDDArc]:
         """Iterate over all outgoing arcs in the MDD.
