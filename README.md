@@ -43,7 +43,8 @@ follows:
 3.  Check the generated documentation via `nbdev_preview`.
 4.  Once you’re ready to commit changes, run the entire notebook, save,
     close it, then confirm via Git.
-    1.  You can also manually run `nbdev_prepare`.
+    1.  You can also manually run `nbdev_prepare` and
+        `pre-commit run --all-files`.
 
 Notably, `README.md` and the files in `python_mdd/` should NOT be
 manually edited; instead, they should be generated based on notebook
@@ -66,6 +67,12 @@ docker compose down
 
 Some notable quirks of this particular containerized setup:
 
+- [pre-commit](https://pre-commit.com/) is configured to enforce
+  type-checking and linting. In particular, **`.git/hooks/pre-commit` is
+  OVERWRITTEN on container start-up**. If you wish to customize
+  `pre-commit` (or disable it), you can do so by modifying
+  `docker/start-notebook.d/20-configure-pre-commit.sh` or adding
+  additional startup scripts.
 - `nbdev_preview` is configured to output to `0.0.0.0:3000` (and will
   say so in the console output), but it’s actually outputting to
   `localhost:3000` (from the perspective of the host machine). This is

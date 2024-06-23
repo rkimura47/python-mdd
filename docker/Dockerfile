@@ -35,7 +35,7 @@ RUN nbdev_install_hooks && \
     fix-permissions "/home/${NB_USER}"
 
 # Install startup scripts
-COPY --chown=${NB_UID}:${NB_GID} docker/install-package-editable.sh /usr/local/bin/start-notebook.d/
+COPY --chown=${NB_UID}:${NB_GID} docker/start-notebook.d/* /usr/local/bin/start-notebook.d/
 
 USER ${NB_UID}
 
