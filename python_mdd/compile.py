@@ -13,7 +13,7 @@ def compile_top_down(
     num_layers: int, # number of (arc) layers, i.e., variables
     domain_function: Callable[[int], list[int]], # function specifying the domain of each layer
     transition_function: Callable[[MDDNodeState, int, int], MDDNodeState], # function specifying the state transitions
-    cost_function: Callable[[MDDNodeState, int, int, MDDNodeState], float], # cost function
+    arc_data_function: Callable[[MDDNodeState, int, int, MDDNodeState], MDDArcData], # function specifying arc data
     root_state: MDDNodeState, # state of the root node
     is_feasible: Callable[[MDDNodeState, int], bool], # function that determines whether a node state is feasible
     max_width: Optional[Callable[[int], int]] = None, # function specifying the maximum width of each layer
@@ -65,5 +65,5 @@ def compile_top_down(
                     if v not in mdd.allnodes_in_layer(j+1):
                         mdd.add_node(v)
                     # Add appropriate arc
-                    mdd.add_arc(MDDArc(d, u, v), cost_function(u.state, d, j, vstate))
+                    mdd.add_arc(MDDArc(d, u, v), arc_data_function(u.state, d, j, vstate))
     return mdd
